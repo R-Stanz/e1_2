@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:17.4-alpine3.21
+    restart: unless-stopped
+    environment:
+      PGUSER: /run/secrets/db_user
+      PGPASSWORD: /run/secrets/db_password
+      PGDATABASE: /run/secrets/db_name
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    secrets:
+      - db_user
+      - db_password
+      - db_name
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 2
+
+secrets:
+   db_user:
+     file: ./secrets/db_user.txt
+   db_password:
+     file: ./secrets/db_password.txt
+   db_name:
+     file: ./secrets/db_name.txt
+
+volumes:
+  postgres-data:
