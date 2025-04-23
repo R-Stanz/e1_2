@@ -181,3 +181,4 @@ postgres-data/*
 
 # Sample data
 sample.csv
+bulls.csv
